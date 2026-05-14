@@ -27,8 +27,9 @@ except OSError:
         nlp = spacy.load("pt_core_news_sm")
 
 def preprocess(text):
+    raw_text = str(text)
     # Converter para string e minúsculas
-    text = str(text).lower()
+    text = raw_text.lower()
     
     # Remoção de pontuação e caracteres especiais
     text = re.sub(r'[^\w\s]', '', text)
@@ -54,6 +55,7 @@ def preprocess(text):
         lemmatized_tokens = [lemmatizer.lemmatize(word) for word in tokens_no_stop]
     
     return {
+        'original_raw': raw_text,
         'original': text,
         'tokens': tokens,
         'tokens_no_stop': tokens_no_stop,
@@ -74,13 +76,14 @@ def main():
     
     print("\n--- Processamento concluído! ---")
     print("Resultados salvos em 'comentarios_processados.csv'.")
-    print("\n=== Exemplo de Processamento do Comentário 4 ===")
-    print("Original: \"o novo update quebrou o jogo inteiro, crasha toda hora\"")
-    print("Texto Limpo (minúsculas + sem pontuação):", df_resultados['original'].iloc[3])
-    print("Tokens:", df_resultados['tokens'].iloc[3])
-    print("Sem Stopwords:", df_resultados['tokens_no_stop'].iloc[3])
-    print("Stemming:", df_resultados['stemmed'].iloc[3])
-    print("Lematização:", df_resultados['lemmatized'].iloc[3])
+    print("\n--- Processamento dos 4 Primeiros Comentários ---")
+    for i in range(4):
+        print(f"\n[Comentário {i+1}]")
+        print("Original:", df_resultados['original_raw'].iloc[i])
+        print("Tokens:", df_resultados['tokens'].iloc[i])
+        print("Sem Stopwords:", df_resultados['tokens_no_stop'].iloc[i])
+        print("Stemming:", df_resultados['stemmed'].iloc[i])
+        print("Lematização:", df_resultados['lemmatized'].iloc[i])
 
 if __name__ == "__main__":
     main()
